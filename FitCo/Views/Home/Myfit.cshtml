@@ -1,0 +1,1588 @@
+﻿@{
+    Layout = null;
+}
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyFit Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/init.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0; /* Set a light background color */
+            display: flex;
+        }
+
+        .left-sidebar,
+        .right-sidebar {
+            width: 12%;
+            background-color: #EAECEB; /* Dark background color */
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            height: 100%;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .left-sidebar {
+            left: 0;
+        }
+
+        .right-sidebar {
+            width: 16%;
+            right: 0;
+            background-color: #EAECEB; /* Dark background color for right sidebar */
+            align-items: flex-start; /* Center items vertically */
+            text-align: left; /* Center text horizontally */
+            height: 100%;
+        }
+
+        .sidebar-heading {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 14%;
+            color: #000;
+        }
+
+        .sidebar-option {
+            display: flex;
+            align-items: center;
+            background-color: #EAECEB;
+            margin-bottom: 10%;
+            width: 90%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            padding: 8px;
+        }
+
+            .sidebar-option:hover {
+                background-color: #AED6F1; /* Dark background on hover */
+                width: 90%;
+            }
+
+        .option-logo {
+            width: 15%;
+            margin-right: 10%;
+        }
+
+        .option-text {
+            font-size: 1rem;
+            color: #000;
+            text-decoration: none;
+        }
+
+        .content {
+            margin-left: 13%; /* Adjusted margin to accommodate left sidebar */
+            margin-right: 13%; /* Adjusted margin to accommodate right sidebar */
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #786ce9;
+            color: #fff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-profile {
+            display: flex;
+            width: 10%;
+            height: 7%;
+            align-items: flex-start;
+        }
+
+        .user-name {
+            margin-right: 10%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            white-space: nowrap; /* Prevent text from wrapping */
+            text-overflow: ellipsis; /* Show ellipsis (...) for overflow text */
+            color: #000;
+            margin-bottom: 2%;
+        }
+
+        .user-photo {
+            width: 250%;
+            height: 80%;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20%;
+            margin-bottom: 2%;
+        }
+
+        .card {
+            background-color: #F8F9F9;
+            width: 90%;
+            padding: 3px;
+            border-radius: 10px;
+            margin-top: 5%;
+            margin-bottom: 4%;
+        }
+
+        .card-heading {
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 2%;
+            color: #000;
+        }
+
+        .logo-and-text {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0%;
+        }
+
+
+        .card-logo {
+            width: 15%;
+            height: 10%;
+            margin-right: 6%;
+        }
+
+        .card-text {
+            font-size: 1rem;
+            color: #333;
+        }
+
+
+
+        .card-text {
+            font-size: 1rem;
+            color: #333;
+        }
+
+
+        .card-info {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5%;
+            color: #000;
+            margin-left: 1%;
+        }
+
+        .card-details {
+            font-size: 0.8rem;
+            color: #555;
+            margin-left: 1%;
+        }
+
+        .card-container {
+            display: flex;
+            gap: 1%; /* Adjust the value as needed for the desired space */
+            margin-left: 2%;
+            margin-right: 2%;
+        }
+
+
+        .my-schedule-heading {
+            margin-top: 10%;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Search bar styling */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center align horizontally */
+            position: relative; /* Add relative positioning */
+            background-color: #fff;
+            border-radius: 20px;
+            padding: 5px 20px; /* Adjust padding for wider search bar */
+            margin-right: 40%;
+            margin-left: 100%;
+            width: 40%; /* Set width for wider search bar */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            width: 20px;
+            height: 20px;
+        }
+
+        .search-input {
+            border: none;
+            outline: none;
+            flex: 1;
+            border-radius: 20px;
+            padding: 5px 35px 5px 35px; /* Adjust padding for text and icon */
+            margin: 0;
+            text-align: center;
+        }
+
+            .search-input::placeholder {
+                color: #ccc;
+                font-style: italic;
+            }
+
+        /* Styling for Hydration Card */
+        .hydration-card {
+            background-color: #FDEBD0; /* Light blue background */
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1%;
+            margin-left: 1%;
+            flex-shrink: 0;
+            width: 20%;
+        }
+
+        .hydration-card-content {
+            background-color: #FDEBD0; /* Light blue background */
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1%;
+            margin-left: 0.7%;
+            flex-shrink: 0;
+            width: 14%; /* Adjusted width to match hydration card */
+        }
+
+        .hydration-heading {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1%;
+        }
+
+        .heading-text {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-left: 5%;
+            margin-right: 5%;
+            margin-bottom: 0%;
+            padding: 1px;
+        }
+
+        .hydration-input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10%;
+        }
+
+        .hydration-input {
+            width: 43%;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10%;
+        }
+
+        .hydration-button {
+            padding: 1px 1px;
+            width: 35px;
+            border: none;
+            border-radius: 3px;
+            background-color: #4CAF50; /* Green color */
+            color: white;
+            margin-right: 1%;
+            cursor: pointer;
+        }
+
+        .hydration-result {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .calories-card {
+            background-color: #FBFCFC; /* Light blue background */
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1%;
+            margin-left: 1%;
+            margin-right: 1.4%;
+            flex-shrink: 0;
+            width: 18%;
+        }
+
+        .calories-card-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px;
+            margin-left: 0%;
+            margin-right: 3%;
+            height: 25%;
+        }
+
+        .calories-heading {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5%;
+            padding: 1px;
+        }
+
+        .sleep-rhythm-chart-container {
+            background-color: #F8F9F9; /* Light blue background */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column; /* Align items in a column */
+            /*justify-content: center;  Center content vertically */
+            /*align-items: center;  Center content horizontally */
+            padding: 5px; /* Increased padding for better spacing */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 2%;
+            margin-left: 1%;
+            margin-right: 2%;
+            margin-bottom: 1%;
+            flex-shrink: 0;
+            width: calc(47% - 2%);
+            height: 10%; /* Set height for the container */
+        }
+
+        .activity-title {
+            margin-bottom: 1px; /* Corrected typo: Changed 08px to 8px */
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .sleep-graph {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-right: 1%;
+        }
+
+        .chart-heading {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        /* recipe */
+
+        .recipe-card {
+            width: 19.3%;
+            height: 200px;
+            margin-bottom: 0%;
+            margin-left: 2%;
+            margin-top: 1%;
+            perspective: 1000px;
+            display: inline-block;
+            padding: 5px;
+        }
+
+            .recipe-card:hover .recipe-card-inner {
+                transform: rotateY(180deg);
+            }
+
+        .recipe-card-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .recipe-card-front,
+        .recipe-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+        }
+
+        .recipe-card-front {
+            background-color: #f7f7f7;
+            color: #333;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .recipe-card-back {
+            background-color: #fff;
+            color: #333;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transform: rotateY(180deg);
+        }
+
+        .recipe-image {
+            width: 100%;
+            height: 70%;
+            border-radius: 10px 10px 0 0;
+            object-fit: cover;
+        }
+
+        .recipe-title {
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .recipe-label {
+            font-size: 1rem;
+            margin-bottom: 5px;
+        }
+
+        .recipe-link {
+            color: blue;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .recipe-labels-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: auto;
+            justify-content: center;
+        }
+
+        .recipe-label-item {
+            background-color: #eee;
+            border-radius: 5px;
+            padding: 2px 8px;
+            margin: 1%;
+            font-size: 1rem;
+        }
+
+        /* Wide Container for Activity */
+        .activity-container {
+            background-color: #F8F9F9; /* Light blue background */
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column; /* Align items in a column */
+            /*justify-content: center;  Center content vertically */
+            /*align-items: center;  Center content horizontally */
+            padding: 5px; /* Increased padding for better spacing */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 2%;
+            margin-left: 0%;
+            margin-right: 2%;
+            margin-bottom: 1%;
+            flex-shrink: 0;
+            width: calc(44% - 3%);
+            height: 10%; /* Set height for the container */
+        }
+
+        #hydrationChart {
+            width: 100%;
+            height: 100%;
+            margin-right: 0%;
+            margin-left: 1%;
+            margin-bottom: 0.01%;
+            margin-top: 0.5%;
+            padding: 1px;
+        }
+
+        #nutrientDistributionChart {
+            width: 100%;
+            height: 100%;
+            margin-right: 1%;
+            margin-left: 1.5%;
+            margin-bottom: 0.01%;
+            margin-top: 0.5%;
+            padding: 3px;
+        }
+
+        #activitiesChart {
+            width: 100%;
+            height: 100%;
+            margin-right: 1%;
+            margin-left: 1.5%;
+            margin-bottom: 0.01%;
+            margin-top: 0.5%;
+            padding: 3px;
+        }
+
+        #sleepRhythmChart {
+            width: 100%;
+            height: 80%;
+            margin-right: 0%;
+            margin-left: 0%;
+        }
+
+        #activityChart {
+            width: 100%;
+            height: 80%;
+            margin-right: 0%;
+            margin-left: 0%;
+        }
+
+        .activity-graph {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-right: 1%;
+        }
+
+        .calories-result {
+            font-size: 0.3rem;
+            margin-bottom: 0%;
+            margin-top: 0%;
+            text-align: left;
+            padding: 0;
+        }
+
+        .nutrition-activity {
+            width: 98%;
+            height: 95%;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            padding: 2px;
+        }
+
+        .additional-info {
+            font-size: 0.8rem; /* Adjust the font size as desired */
+            text-align: left; /* Align text to the left */
+            padding: 3px; /* Remove padding */
+        }
+
+        /*.hydration-card {
+            background-color: #FDEBD0;*/ /* Light blue background */
+        /*border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1%;
+            margin-left: 1%;
+            flex-shrink: 0;
+            width: 18%;
+        }*/
+
+        .meal-log {
+            display: flex;
+            flex-wrap: wrap;
+            width: 80%; /* Adjusted width to fit alongside the hydration card */
+        }
+
+        .meal {
+            background-color: #F8F9F9; /* Light blue background */
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 1.5%;
+            margin-bottom: 1%;
+            margin-left: 1%;
+            margin-right: 0.5%;
+            flex-shrink: 0;
+            width: 14%; /* Adjusted width to match hydration card */
+        }
+
+        .meal-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .meal-heading {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-left: 5%;
+            margin-right: 5%;
+            margin-bottom: 0%;
+            padding: 1px;
+        }
+
+        .meal-input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10%;
+        }
+
+        .meal-input {
+            width: 80%;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-right: 10%;
+        }
+
+        .meal-button {
+            padding: 1px 1px;
+            width: 50px;
+            border: none;
+            border-radius: 3px;
+            background-color: #4CAF50; /* Green color */
+            color: white;
+            cursor: pointer;
+        }
+
+        .calories-output {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .flex-container {
+            display: flex;
+            align-items: flex-start; /* Align items to the start of the cross axis */
+            background-color: #000;
+            justify-content: flex-start; /* Align items along the main axis to the start */
+            margin-left: 10px; /* Adjust left margin */
+            margin-right: 1%;
+            flex-shrink: 0;
+            width: 100%;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin-left: 2%;
+            margin-right: 2%;
+            margin-top: 2%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+            th:last-child, td:last-child {
+                text-align: center;
+            }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+            text-transform: uppercase;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .delete-button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+            .delete-button:hover {
+                background-color: #d32f2f;
+            }
+
+        .sidebar-option.active {
+            /* Style for the active button */
+            background-color: #D6EAF8;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="left-sidebar">
+        <div class="sidebar-heading">MyFit</div>
+        <div class="sidebar-option" id="dashboardButton">
+            <img src="/img/dashboard_logo.jpeg" alt="Dashboard Logo" class="option-logo">
+            <a href="myfit.html" class="option-text">Dashboard</a>
+        </div>
+        <div class="sidebar-option">
+            <img src="/img/diet_logo.png" alt="Reports Logo" class="option-logo">
+            <a asp-controller="Home" asp-action="Recipes" class="option-text">Recipes</a>
+        </div>
+        <div class="sidebar-option">
+            <img src="/img/yoga_logo.jpeg" alt="Yoga Logo" class="option-logo">
+            <a asp-controller="Home" asp-action="Yoga" class="option-text" id="yogaButton">Yoga</a>
+        </div>
+        <div class="sidebar-option">
+            <img src="/img/workout_logo.jpeg" alt="Reports Logo" class="option-logo">
+            <span class="option-text">Workout</span>
+        </div>
+        <div class="sidebar-option">
+            <img src="/img/schedule_logo.jpeg" alt="Reports Logo" class="option-logo">
+            <span class="option-text">My Schedule</span>
+        </div>
+        <div class="sidebar-option">
+            <img src="/img/profile_logo.jpeg" alt="Analytics Logo" class="option-logo">
+            <a asp-controller="Home" asp-action="Profile" class="option-text">Edit Profile</a>
+        </div>
+    </div>
+    <div class="content">
+
+
+        <div class="card-container">
+            <!-- Hydration Card -->
+
+            <div class="calories-card">
+                <div class="calories-card-content">
+                    <div class="calories-heading">
+                        <img src="/img/hydration_logo.jpeg" alt="Hydration Logo" style="width: 20%; margin-right: 5%;">
+                        <div class="heading-text">Hydration</div>
+                    </div>
+                    <div>
+                        <div class="calories-result">
+                            <div class="nutrition-activity">
+                                <canvas id="hydrationChart"></canvas>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Calories Card -->
+            <div class="calories-card">
+                <div class="calories-card-content">
+                    <div class="calories-heading">
+                        <img src="/img/calories_logo.jpeg" alt="Calories Logo" style="width: 20%; margin-right: 5%;">
+                        <div class="heading-text">Calories</div>
+                    </div>
+                    <div>
+                        <div class="calories-result">
+                            <div class="nutrition-activity">
+                                <canvas id="nutrientDistributionChart"></canvas>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="calories-card">
+                <div class="calories-card-content">
+                    <div class="calories-heading">
+                        <img src="/img/health_metrics.jpeg" alt="Calories Logo" style="width: 20%; margin-right: 5%;">
+                        <div class="heading-text">Health Metrics</div>
+                    </div>
+                    <div>
+
+                        <div class="additional-info">
+                            <p>HR: 78bpm</p>
+
+                            <p>Oxygen: 96%</p>
+                            <p>BMI: 28%</p>
+                            <p>Stress: 35%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="calories-card">
+                <div class="calories-card-content">
+                    <div class="calories-heading">
+                        <img src="/img/activity_logo.png" alt="activities Logo" style="width: 20%; margin-right: 5%;">
+                        <div class="heading-text">Activity</div>
+                    </div>
+                    <div>
+                        <div class="calories-result">
+                            <div class="nutrition-activity">
+                                <canvas id="activitiesChart"></canvas>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="card-container">
+            <div class="sleep-rhythm-chart-container">
+                <div class="activity-title">Sleep</div>
+                <div class="sleep-graph">
+                    <canvas id="sleepRhythmChart"></canvas>
+                </div>
+            </div>
+
+            <div class="activity-container">
+                <div class="activity-title">Daily Steps</div>
+                <div class="activity-graph">
+                    <canvas id="activityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 1%; margin-bottom: 3%; width: 270px; background-color: #D6DBDF; color: #000; margin: 0 auto; text-align: center; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); letter-spacing: 1px; margin-top: 1%;">
+            <h2 style="margin: 0; font-size: 1.2rem; font-weight: bold;">Log your Intakes</h2>
+        </div>
+
+        <div class="card-container">
+            <div class="meal">
+                <div class="meal-heading">Breakfast</div>
+                <div class="meal-input-container">
+                    <input type="number" id="breakfastCalories" class="meal-input" placeholder="Enter">
+                    <button onclick="logMealBreakfast('Breakfast')" class="meal-button">Log</button>
+                </div>
+                <div id="breakfastCalorieStatus" class="calories-output"></div>
+            </div>
+            <div class="meal">
+                <div class="meal-heading">Lunch</div>
+                <div class="meal-input-container">
+                    <input type="number" id="lunchc" class="meal-input" placeholder="Enter">
+                    <button onclick="logmeallunch()" class="meal-button">Log</button>
+                </div>
+                <div id="lunchCalorieStatus" class="calories-output"></div>
+            </div>
+            <div class="meal">
+                <div class="meal-heading">Snack</div>
+                <div class="meal-input-container">
+                    <input type="number" id="snackc" class="meal-input" placeholder="Enter">
+                    <button onclick="logmealsnack()" class="meal-button">Log</button>
+                </div>
+                <div id="snackCalorieStatus" class="calories-output"></div>
+            </div>
+            <div class="meal">
+                <div class="meal-heading">Dinner</div>
+                <div class="meal-input-container">
+                    <input type="number" id="dinnerc" class="meal-input" placeholder="Enter">
+                    <button onclick="logmealdinner()" class="meal-button">Log</button>
+                </div>
+                <div id="dinnerCalorieStatus" class="calories-output"></div>
+            </div>
+            <div class="meal">
+                <div class="meal-heading">Hydration</div>
+                <div class="meal-input-container">
+                    <input type="number" id="hydc" class="meal-input" placeholder="Enter">
+                    <button onclick="logmealhydration()" class="meal-button">Log</button>
+                </div>
+                <div id="hydrationResult" class="calories-output"></div>
+            </div>
+
+        </div>
+
+        <div style="margin-top: 1%; margin-bottom: 1%; width: 350px; background-color: #D6DBDF; color: #000; margin: 0 auto; text-align: center; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); letter-spacing: 1px; margin-top: 1%; ">
+            <h2 style="margin: 0; font-size: 1.2rem; font-weight: bold;">Healthy Meal Plan for Today</h2>
+        </div>
+
+        <div class="cards-container">
+
+            <div class="recipe-card">
+                <div class="recipe-card-inner">
+                    <div class="recipe-card-front">
+                        <img src="/img/oats_recipe.jpeg" alt="Oats Recipe" class="recipe-image">
+
+                        <div class="recipe-labels-container">
+                            <div class="recipe-label-item" style="font-size: 1rem; color: #333; background-color: #F9EBEA; border-radius: 5px; padding: 5px 5px; margin: 8px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-transform: uppercase; font-weight: bold;">Breakfast</div>
+
+                        </div>
+                    </div>
+                    <div class="recipe-card-back">
+                        <div class="recipe-title">Oats</div>
+                        <div class="shopping-list">
+                            <div class="shopping-list-item" style="font-size: 1rem;">Rolled oats</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Ripe bananas</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Raisins</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Peanut butter </div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Cinnamon</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Chocolate Chips</div>
+
+
+                        </div>
+                        <div class="recipe-video">
+                            <a href="https://www.youtube.com/watch?v=VZOHHCosuzY" target="_blank">
+                                <img src="/img/youtube_logo.png" alt="YouTube Logo" style="width: 40%; margin-right: 0%;margin-left:30%">
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-card">
+                <div class="recipe-card-inner">
+                    <div class="recipe-card-front">
+                        <img src="/img/avocado_recipe.jpeg" alt="Avocado Recipe" class="recipe-image">
+
+                        <div class="recipe-labels-container">
+                            <div class="recipe-label-item" style="font-size: 1rem; color: #333; background-color: #F9EBEA; border-radius: 5px; padding: 5px 5px; margin: 8px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-transform: uppercase; font-weight: bold; ">Lunch</div>
+                        </div>
+                    </div>
+                    <div class="recipe-card-back">
+                        <div class="recipe-title">Avocado Toast</div>
+                        <div class="shopping-list">
+                            <div class="shopping-list-item" style="font-size: 1rem;">Avocados</div>
+                            <div class="shopping-list-item" style="font-size:1rem;">Bread </div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Red onion</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Fresh cilantro</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Lime</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Feta cheese</div>
+
+
+                        </div>
+                        <div class="recipe-video">
+                            <a href="https://youtu.be/0R5km8AQGlI?si=SBHZiQQKOSaNLUd1" target="_blank">
+                                <img src="/img/youtube_logo.png" alt="YouTube Logo" style="width: 40%; margin-right: 0%;margin-left:30%">
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-card">
+                <div class="recipe-card-inner">
+                    <div class="recipe-card-front">
+                        <img src="/img/fruits_logo.jpeg" alt="Fruits Recipe" class="recipe-image">
+
+                        <div class="recipe-labels-container">
+                            <div class="recipe-label-item" style="font-size: 1rem; color: #333; background-color: #F9EBEA; border-radius: 5px; padding: 5px 5px; margin: 8px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-transform: uppercase; font-weight: bold; ">Treats</div>
+                        </div>
+                    </div>
+                    <div class="recipe-card-back">
+                        <div class="recipe-title">Oats Cookies</div>
+                        <div class="shopping-list">
+                            <div class="shopping-list-item" style="font-size: 1rem;">Rolled oats</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Chocolate Chips </div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Almond Butter</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Bananas</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Cinnamon</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Raisins</div>
+                        </div>
+                        <div class="recipe-video">
+                            <a href="https://youtu.be/Hobi9J9fRnA?si=hZG0BBpkaTQmhkgZ" target="_blank">
+                                <img src="/img/youtube_logo.png" alt="YouTube Logo" style="width: 40%; margin-right: 0%;margin-left:30%">
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recipe-card">
+                <div class="recipe-card-inner">
+                    <div class="recipe-card-front">
+                        <img src="/img/salad_recipe.jpeg" alt="Salad Recipe" class="recipe-image">
+
+                        <div class="recipe-labels-container">
+                            <div class="recipe-label-item" style="font-size: 1rem; color: #333; background-color: #F9EBEA; border-radius: 5px; padding: 5px 5px; margin: 8px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); text-transform: uppercase; font-weight: bold; ">Dinner</div>
+
+
+                        </div>
+                    </div>
+                    <div class="recipe-card-back">
+                        <div class="recipe-title">Salad</div>
+                        <div class="shopping-list">
+                            <div class="shopping-list-item" style="font-size: 1rem;">Mixed greens</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Tomatoes</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Cucumber</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Avocado</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Feta cheese</div>
+                            <div class="shopping-list-item" style="font-size: 1rem;">Olive oil</div>
+                        </div>
+                        <div class="recipe-video">
+                            <a href="https://youtube.com/shorts/YQG0ieYINc0?si=9qcAvKJYZZxGaYFa" target="_blank">
+                                <img src="/img/youtube_logo.png" alt="YouTube Logo" style="width: 40%; margin-right: 0%;margin-left:30%">
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+        <div style="margin-top: 1%; margin-bottom: 1%; width: 300px; background-color: #D6DBDF; color: #000; margin: 0 auto; text-align: center; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); letter-spacing: 1px; margin-top: 1%; ">
+            <h2 style="margin: 0; font-size: 1.2rem; font-weight: bold;">Your Intake history</h2>
+        </div>
+
+        <div class="card-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Meal</th>
+                        <th>Amount (in Liters / Calories)</th>
+                        <th>Date & Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="logtable">
+                    <tr>
+                        <td>Breakfast</td>
+                        <td>500 Calories</td>
+                        <td>2024-04-15 08:00 AM</td>
+                        <td><button class="delete-button">Delete</button></td>
+                    </tr>
+
+                    <!-- Add more rows here -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="right-sidebar">
+        <div class="user-profile">
+            <img src="/img/user_photo.jpeg" alt="User Photo" class="user-photo">
+            <div class="user-name"> Hi! Jiva Taylor</div>
+        </div>
+        <div class="card">
+            <div class="card-info">56&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5.8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;28</div>
+            <div class="card-details">Weight &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Height &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Age</div>
+        </div>
+        <div class="my-schedule-heading">My Schedule</div>
+
+        <div class="card">
+            <div class="card-heading">Monday</div>
+            <div class="logo-and-text">
+                <img src="/img/running_logo.jpeg" alt="Running Logo" class="card-logo">
+                <span class="card-text">Running</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-heading">Tuesday</div>
+            <div class="logo-and-text">
+                <img src="/img/sleeping_logo.jpeg" alt="Running Logo" class="card-logo">
+                <span class="card-text">Workout</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-heading">Wednesday</div>
+            <div class="logo-and-text">
+                <img src="/img/weight_loss_logo.jpeg" alt="Running Logo" class="card-logo">
+                <span class="card-text">Weight Loss</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-heading">Thursday</div>
+            <div class="logo-and-text">
+                <img src="/img/yoga_logo_rightbar.jpeg" alt="Running Logo" class="card-logo">
+                <span class="card-text">Yoga</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-heading">Friday</div>
+            <div class="logo-and-text">
+                <img src="/img/swimming_logo.jpeg" alt="Running Logo" class="card-logo">
+                <span class="card-text">Swimming</span>
+            </div>
+        </div>
+
+
+        <!-- Add your schedule content here -->
+    </div>
+    <script>let waterIntakeLog = [];
+            let hydrationResultElement = document.getElementById('hydrationResult');
+
+            function logWaterIntake() {
+                const waterAmount = parseFloat(document.getElementById('waterAmount').value);
+                waterIntakeLog.push(waterAmount);
+                calculateHydration();
+            }
+
+            function calculateHydration() {
+                const totalWaterIntake = waterIntakeLog.reduce((acc, curr) => acc + curr, 0);
+                const hydrationPercentage = (totalWaterIntake / 5) * 100; // Assuming a daily recommended intake of 5L
+
+                let message;
+                if (hydrationPercentage >= 100) {
+                    message = `You've reached your hydration goal (${hydrationPercentage.toFixed(1)}%). Great job!`;
+                } else {
+                    message = `Your hydration level : ${hydrationPercentage.toFixed(1)}%.`;
+                }
+
+                hydrationResultElement.textContent = message;
+            }
+
+
+            function logMealBreakfast(meal){
+
+
+            var x = document.getElementById('breakfastCalories').value;
+            if(x<0)
+            {    alert('Please enter a valid calorie value');}
+            const percentage = (x / 500) * 100;
+
+                let message;
+                if (percentage < 70) {
+                    message = 'You are calorie-deficit';
+                } else if (percentage > 100) {
+                    message = 'You had a high-calorie diet';
+                } else {
+                    message = 'Your calorie intake is within the recommended range';
+                }
+
+                // Update the message element for the specific meal
+                document.getElementById('breakfastCalorieStatus').textContent = message;
+            var cont = document.getElementById('logtable').innerHTML;
+            var currentDate = new Date();
+
+            // Get the current date and time components
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1; // Months are zero-indexed, so we add 1
+            var day = currentDate.getDate();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var seconds = currentDate.getSeconds();
+            var iid = "b" + bid;
+            console.log(iid);
+            // Format the date and time as needed
+            var formattedDateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+                cont = cont + `<tr id='${iid}'>
+                <td>Breakfast</td>
+                <td>${x}</td>
+                <td>${formattedDateTime}</td>
+                <td><button class="delete-button" onclick='del(${bid},"b")'>Delete</button></td>
+            </tr>`;
+            document.getElementById('logtable').innerHTML = cont;
+            bid = bid + 1;
+            }
+
+            function del(iid, i)
+            {
+                console.log(iid);
+                var x = i + iid;
+                //console.log(document.getElementById(iid).innerHTML);
+                document.getElementById(x).innerHTML = '';
+
+            }
+
+
+
+            function logmeallunch(){
+            var x = document.getElementById('lunchc').value;
+            if(x<0)
+            {    alert('Please enter a valid calorie value');}
+            const percentage = (x / 1200) * 100;
+
+                let message;
+                if (percentage < 70) {
+                    message = 'You are calorie-deficit';
+                } else if (percentage > 100) {
+                    message = 'You had a high-calorie diet';
+                } else {
+                    message = 'Your calorie intake is within the recommended range';
+                }
+
+                // Update the message element for the specific meal
+                document.getElementById('lunchCalorieStatus').textContent = message;
+            var cont = document.getElementById('logtable').innerHTML;
+            var currentDate = new Date();
+
+            // Get the current date and time components
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1; // Months are zero-indexed, so we add 1
+            var day = currentDate.getDate();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var seconds = currentDate.getSeconds();
+            var iid = "l" + lid;
+            console.log(iid);
+            // Format the date and time as needed
+            var formattedDateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+                cont = cont + `<tr id='${iid}'>
+                <td>Lunch</td>
+                <td>${x}</td>
+                <td>${formattedDateTime}</td>
+                <td><button class="delete-button" onclick='del(${lid},"l")'>Delete</button></td>
+            </tr>`;
+            document.getElementById('logtable').innerHTML = cont;
+            lid = lid + 1;
+            }
+
+            function logmealsnack(){
+            var x = document.getElementById('snackc').value;
+            if(x<0)
+            {    alert('Please enter a valid calorie value');}
+            const percentage = (x / 300) * 100;
+
+                let message;
+                if (percentage < 70) {
+                    message = 'You are calorie-deficit';
+                } else if (percentage > 100) {
+                    message = 'You had a high-calorie diet';
+                } else {
+                    message = 'Your calorie intake is within the recommended range';
+                }
+
+                // Update the message element for the specific meal
+                document.getElementById('snackCalorieStatus').textContent = message;
+            var cont = document.getElementById('logtable').innerHTML;
+            var currentDate = new Date();
+
+            // Get the current date and time components
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1; // Months are zero-indexed, so we add 1
+            var day = currentDate.getDate();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var seconds = currentDate.getSeconds();
+            var iid = "s" + sid;
+            console.log(iid);
+            // Format the date and time as needed
+            var formattedDateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+                cont = cont + `<tr id='${iid}'>
+                <td>Snacks</td>
+                <td>${x}</td>
+                <td>${formattedDateTime}</td>
+                <td><button class="delete-button" onclick='del(${sid},"s")'>Delete</button></td>
+            </tr>`;
+            document.getElementById('logtable').innerHTML = cont;
+            sid = sid + 1;
+            }
+
+            function logmealdinner(){
+            var x = document.getElementById('dinnerc').value;
+            if(x<0)
+            {    alert('Please enter a valid calorie value');}
+            const percentage = (x / 800) * 100;
+
+                let message;
+                if (percentage < 70) {
+                    message = 'You are calorie-deficit';
+                } else if (percentage > 100) {
+                    message = 'You had a high-calorie diet';
+                } else {
+                    message = 'Your calorie intake is within the recommended range';
+                }
+
+                // Update the message element for the specific meal
+                document.getElementById('dinnerCalorieStatus').textContent = message;
+            var cont = document.getElementById('logtable').innerHTML;
+            var currentDate = new Date();
+
+            // Get the current date and time components
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1; // Months are zero-indexed, so we add 1
+            var day = currentDate.getDate();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var seconds = currentDate.getSeconds();
+            var iid = "d" + did;
+            console.log(iid);
+            // Format the date and time as needed
+            var formattedDateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+                cont = cont + `<tr id='${iid}'>
+                <td>Dinner</td>
+                <td>${x}</td>
+                <td>${formattedDateTime}</td>
+                <td><button class="delete-button" onclick='del(${did},"d")'>Delete</button></td>
+            </tr>`;
+            document.getElementById('logtable').innerHTML = cont;
+            did = did + 1;
+            }
+
+            function logmealhydration(){
+            var x = document.getElementById('hydc').value;
+            var cont = document.getElementById('logtable').innerHTML;
+            var currentDate = new Date();
+
+            // Get the current date and time components
+            var year = currentDate.getFullYear();
+            var month = currentDate.getMonth() + 1; // Months are zero-indexed, so we add 1
+            var day = currentDate.getDate();
+            var hours = currentDate.getHours();
+            var minutes = currentDate.getMinutes();
+            var seconds = currentDate.getSeconds();
+            var iid = "h" + hid;
+            console.log(iid);
+            // Format the date and time as needed
+            var formattedDateTime = year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+                cont = cont + `<tr id='${iid}'>
+                <td>Hydration</td>
+                <td>${x}</td>
+                <td>${formattedDateTime}</td>
+                <td><button class="delete-button" onclick='del(${hid},"h")'>Delete</button></td>
+            </tr>`;
+            document.getElementById('logtable').innerHTML = cont;
+            hid = hid + 1;
+            }
+
+
+
+            const sleepData = {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Light Sleep (hr)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1,
+                    data: [3, 5, 2, 7, 3.5, 4, 6], // Sample data for light sleep duration
+                }, {
+                    label: 'Deep Sleep (hr)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                    data: [1, 2, 2.5, 1.5, 3, 2, 1.75], // Sample data for deep sleep duration
+                }]
+            };
+
+            // Configuration options for sleep rhythm bar chart
+            const sleepChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                    }
+                }
+            };
+
+            // Create sleep rhythm bar chart
+
+            var canvas = document.getElementById('sleepRhythmChart');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            const ctx = document.getElementById('sleepRhythmChart').getContext('2d');
+            const sleepRhythmChart = new Chart(ctx, {
+                type: 'bar',
+                data: sleepData,
+                options: sleepChartOptions,
+            });
+
+            // Line chart data
+            var activityData = {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Steps',
+                    data: [7500, 8200, 7800, 8400, 8800, 9000, 8200], // Example data (replace with actual steps data)
+                    borderColor: '#36a2eb',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 2
+                }]
+            };
+
+            var canvas = document.getElementById('activityChart');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            var ctxActivity = document.getElementById('activityChart').getContext('2d');
+
+            // Create the line chart
+            var activityChart = new Chart(ctxActivity, {
+                type: 'line',
+                data: activityData,
+
+            });
+
+            const nutrientData = {
+                labels: ['Carbs', 'Protein', 'Fats'],
+                datasets: [{
+                    label: 'Nutrients',
+                    data: [40, 30, 30], // Sample data for carbs, protein, and fats percentages
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)', // Carbs color
+                        'rgba(54, 162, 235, 0.5)', // Protein color
+                        'rgba(255, 206, 86, 0.5)'  // Fats color
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',  // Carbs border color
+                        'rgba(54, 162, 235, 1)',  // Protein border color
+                        'rgba(255, 206, 86, 1)'   // Fats border color
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            // Configuration options for nutrient distribution donut chart
+            const nutrientDistributionOptions = {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'right', // Position legend on the right side
+                        labels: {
+                            fontSize: 4, // Adjust legend item font size
+                            usePointStyle: true, // Use color dots instead of rectangles
+                            boxWidth: 10, // Set the size of color dots
+                            pointRadius: 0.2,
+                        },
+                        generateLabels: function (chart) {
+                            const data = chart.data;
+                            if (data.labels.length && data.datasets.length) {
+                                return data.labels.map(function (label, i) {
+                                    const meta = chart.getDatasetMeta(0);
+                                    const ds = data.datasets[0];
+                                    const arc = meta.data[i];
+                                    const custom = arc && arc.custom || {};
+                                    const getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
+                                    const arcOpts = chart.options.elements.arc;
+                                    const fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+                                    const stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+                                    const bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+
+                                    // Build Legend Item
+                                    return {
+                                        text: label,
+                                        fillStyle: fill,
+                                        strokeStyle: stroke,
+                                        lineWidth: bw,
+                                        hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+
+                                        // Extra data used for toggling the correct item
+                                        index: i
+                                    };
+                                });
+                            }
+                            return [];
+                        }
+                    }
+                }
+            };
+
+            var canvas = document.getElementById('nutrientDistributionChart');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            // Create nutrient distribution donut chart
+            const ctxNutrient = document.getElementById('nutrientDistributionChart').getContext('2d');
+            const nutrientDistributionChart = new Chart(ctxNutrient, {
+                type: 'doughnut',
+                data: nutrientData,
+                options: nutrientDistributionOptions,
+            });
+
+
+
+            // Sample data for activities pie chart
+            const activitiesData = {
+                labels: ['Swim', 'Run', 'Yoga', 'Gym'],
+                datasets: [{
+                    label: 'Activities',
+                    data: [25, 35, 20, 20], // Sample data percentages for each activity
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.5)', // Swimming color
+                        'rgba(54, 162, 235, 0.5)', // Running color
+                        'rgba(255, 206, 86, 0.5)', // Yoga color
+                        'rgba(75, 192, 192, 0.5)'  // Weight Loss color
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)', // Swimming border color
+                        'rgba(54, 162, 235, 1)', // Running border color
+                        'rgba(255, 206, 86, 1)', // Yoga border color
+                        'rgba(75, 192, 192, 1)'  // Weight Loss border color
+                    ],
+                    borderWidth: 1,
+                }]
+            };
+
+            // Configuration options for activities pie chart
+            const activitiesChartOptions = {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'right', // Position legend on the right side
+                        labels: {
+                            fontSize: 8, // Adjust legend item font size
+                            usePointStyle: true, // Use color dots instead of rectangles
+                            boxWidth: 10, // Set the size of color dots
+                            pointRadius: 1, // Add padding between legend items
+                        },
+                    }
+                },
+            };
+
+            var canvas = document.getElementById('activitiesChart');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+
+            // Create activities pie chart
+            const ctxActivities = document.getElementById('activitiesChart').getContext('2d');
+            const activitiesChart = new Chart(ctxActivities, {
+                type: 'pie',
+                data: activitiesData,
+                options: activitiesChartOptions,
+            });
+
+            // Line chart data
+            var hydrationData = {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: '',
+                    data: [80, 40, 60, 55, 70, 35, 60], // Example data (replace with actual data)
+                    borderColor: 'rgba(54, 162, 235, 0.9)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Background color for the area below the line
+                    borderWidth: 1,
+                    fill: true, // Fill the area under the line
+                    pointRadius: 0, // Set the size of data points (markers)
+                    borderWidth: 0.9,
+                }]
+            };
+
+            var canvas = document.getElementById('hydrationChart');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            var ctxHydration = document.getElementById('hydrationChart').getContext('2d');
+
+            // Create the line chart
+            var hydrationChart = new Chart(ctxHydration, {
+                type: 'line',
+                data: hydrationData,
+                options: {
+                    elements: {
+                        line: {
+                            borderWidth: 0 // Set border width of the line to 0
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true, // Start the y-axis at zero
+                            max: 100, // Set the maximum value of the y-axis
+                            ticks: {
+                                stepSize: 10 // Set the interval between ticks on the y-axis
+                            }
+                        },
+                        x: {
+                            display: false // Hide the x-axis labels
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                fontSize: 10, // Adjust the font size of the legend labels
+                                boxWidth: 0
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Get the current page URL
+            const currentPageUrl = window.location.href;
+
+            // Get the dashboard button element
+            const dashboardButton = document.getElementById('dashboardButton');
+
+
+            // Check if the current page URL contains 'myfit.html'
+            if (currentPageUrl.includes('myfit.html')) {
+                // Add 'active' class to dashboard button
+                dashboardButton.classList.add('active');
+            }</script>
+
+</body>
